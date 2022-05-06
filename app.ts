@@ -50,10 +50,30 @@ class ProjectInput {
     this.attach();
   }
   //   private make it so the method can only be accessed from inside the class.
+
+  private gatherUserInput(): [string, string, number] | void {
+    const entertedTitle = this.titleInputElement.value;
+    const entertedDescription = this.descriptionInputElement.value;
+    const entertedPeople = this.peopleInputElement.value;
+    if (
+      entertedTitle.trim().length === 0 ||
+      entertedDescription.trim().length === 0 ||
+      entertedPeople.trim().length === 0
+    ) {
+      alert("Invalid input, please try again!");
+      return;
+    } else {
+      return [entertedTitle, entertedDescription, +entertedPeople];
+    }
+  }
   @autoBind
   private submitHandler(event: Event) {
     event.preventDefault();
-    console.log(this.titleInputElement.value);
+    const userInput = this.gatherUserInput();
+    if (Array.isArray(userInput)) {
+      const [title, desc, people] = userInput;
+      console.log(title, desc, people);
+    }
   }
   private configure() {
     this.element.addEventListener("submit", this.submitHandler);
