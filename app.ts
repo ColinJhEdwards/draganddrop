@@ -1,3 +1,54 @@
+// Validation Logic
+// creating a interface like so will pretty much say "hey where ever i apply this as a type
+// the property should match this structure"
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
+function validate(validatableInput: Validatable) {
+  let isValid = true;
+  //   required Check
+  if (validatableInput.required) {
+    isValid = isValid && validatableInput.value.toString().trim().length !== 0;
+  }
+  //   minLength Check
+  if (
+    validatableInput.minLength != null &&
+    typeof validatableInput.value === "string"
+  ) {
+    isValid =
+      isValid && validatableInput.value.length > validatableInput.minLength;
+  }
+  //   maxlength Check
+  if (
+    validatableInput.maxLength != null &&
+    typeof validatableInput.value === "string"
+  ) {
+    isValid =
+      isValid && validatableInput.value.length < validatableInput.maxLength;
+  }
+  //   min check
+  if (
+    validatableInput.min != null &&
+    typeof validatableInput.value === "number"
+  ) {
+    isValid = isValid && validatableInput.value > validatableInput.min;
+  }
+  //   max check
+  if (
+    validatableInput.max != null &&
+    typeof validatableInput.value === "number"
+  ) {
+    isValid = isValid && validatableInput.value < validatableInput.max;
+  }
+  return isValid;
+}
+
 // autobind decorator
 function autoBind(
   target: any,
@@ -55,10 +106,26 @@ class ProjectInput {
     const entertedTitle = this.titleInputElement.value;
     const entertedDescription = this.descriptionInputElement.value;
     const entertedPeople = this.peopleInputElement.value;
+
+    const titleValidatable: Validatable = {
+      value: entertedTitle,
+      required: true,
+    };
+    const descriptionValidatable: Validatable = {
+      value: entertedDescription,
+      required: true,
+      minLength: 5,
+    };
+    const peopleValidatable: Validatable = {
+      value: +entertedPeople,
+      required: true,
+      min: 1,
+      max: 5,
+    };
     if (
-      entertedTitle.trim().length === 0 ||
-      entertedDescription.trim().length === 0 ||
-      entertedPeople.trim().length === 0
+      !validate(titleValidatable) &&
+      !validate(descriptionValidatable) &&
+      !validate(peopleValidatable)
     ) {
       alert("Invalid input, please try again!");
       return;
