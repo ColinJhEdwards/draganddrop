@@ -199,27 +199,15 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   }
 }
 
-class ProjectInput {
+class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   // indicate property names and what their type will be, in this case a bunch of html elements
-  templateElement: HTMLTemplateElement;
-  hostElement: HTMLDivElement;
-  element: HTMLFormElement;
   titleInputElement: HTMLInputElement;
   descriptionInputElement: HTMLInputElement;
   peopleInputElement: HTMLInputElement;
   constructor() {
+    super(`project-input`, `app`, true, "user-input");
     // the "!" tells typescript we are confident this element is available
     // and we are also saying it will be a HTML Template Element
-    this.templateElement = document.getElementById(
-      "project-input"
-    )! as HTMLTemplateElement;
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
-    const importedNode = document.importNode(
-      this.templateElement.content,
-      true
-    );
-    this.element = importedNode.firstElementChild as HTMLFormElement;
-    this.element.id = "user-input";
     // grabbing elements within the form
     this.titleInputElement = this.element.querySelector(
       "#title"
@@ -230,8 +218,11 @@ class ProjectInput {
     this.peopleInputElement = this.element.querySelector(
       "#people"
     ) as HTMLInputElement;
+
     this.configure();
-    this.attach();
+  }
+  configure() {
+    this.element.addEventListener("submit", this.submitHandler);
   }
   //   private make it so the method can only be accessed from inside the class.
 
@@ -283,12 +274,7 @@ class ProjectInput {
       this.clearInputs();
     }
   }
-  private configure() {
-    this.element.addEventListener("submit", this.submitHandler);
-  }
-  private attach() {
-    this.hostElement.insertAdjacentElement("afterbegin", this.element);
-  }
+  renderContent() {}
 }
 
 const prjInput = new ProjectInput();

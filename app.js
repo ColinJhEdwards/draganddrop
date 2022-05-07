@@ -139,21 +139,19 @@ class ProjectList extends Component {
             this.type.toUpperCase() + " PROJECTS";
     }
 }
-class ProjectInput {
+class ProjectInput extends Component {
     constructor() {
+        super(`project-input`, `app`, true, "user-input");
         // the "!" tells typescript we are confident this element is available
         // and we are also saying it will be a HTML Template Element
-        this.templateElement = document.getElementById("project-input");
-        this.hostElement = document.getElementById("app");
-        const importedNode = document.importNode(this.templateElement.content, true);
-        this.element = importedNode.firstElementChild;
-        this.element.id = "user-input";
         // grabbing elements within the form
         this.titleInputElement = this.element.querySelector("#title");
         this.descriptionInputElement = this.element.querySelector("#description");
         this.peopleInputElement = this.element.querySelector("#people");
         this.configure();
-        this.attach();
+    }
+    configure() {
+        this.element.addEventListener("submit", this.submitHandler);
     }
     //   private make it so the method can only be accessed from inside the class.
     gatherUserInput() {
@@ -199,12 +197,7 @@ class ProjectInput {
             this.clearInputs();
         }
     }
-    configure() {
-        this.element.addEventListener("submit", this.submitHandler);
-    }
-    attach() {
-        this.hostElement.insertAdjacentElement("afterbegin", this.element);
-    }
+    renderContent() { }
 }
 __decorate([
     autoBind
