@@ -1,8 +1,36 @@
+// project state management class
+class ProjectState {
+  private projects: any[] = [];
+  private static instance: ProjectState;
+  private constructor() {}
+
+  static getInstance() {
+    if (this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+
+  addProject(title: string, description: string, numOfPeople: number) {
+    const newProject = {
+      id: Math.random().toString(),
+      title: title,
+      description: description,
+      people: numOfPeople,
+    };
+    this.projects.push(newProject);
+  }
+}
+
+const projectState = ProjectState.getInstance();
+
 // Validation Logic
 // creating a interface like so will pretty much say "hey where ever i apply this as a type
 // the property should match this structure"
 interface Validatable {
   value: string | number;
+  //   the question mark indicates that the property is optional
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -175,7 +203,7 @@ class ProjectInput {
     const userInput = this.gatherUserInput();
     if (Array.isArray(userInput)) {
       const [title, desc, people] = userInput;
-      console.log(title, desc, people);
+      projectState.addProject(title, desc, people);
       this.clearInputs();
     }
   }
