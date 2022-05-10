@@ -1,6 +1,6 @@
 // drag and drop interfaces
 // namespace is similar to using import/export in javascript
-namespace DDInterfaces {
+namespace App {
   export interface Draggable {
     dragStartHandler(event: DragEvent): void;
     dragEndHandler(event: DragEvent): void;

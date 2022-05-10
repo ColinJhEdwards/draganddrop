@@ -1,22 +1,8 @@
 // this is how we import the namespace, triple / is important
 /// <reference path="drag-drop-interface.ts" />
+/// <reference path="project-model.ts" />
 
 namespace App {
-  // Project Type class
-  enum ProjectStatus {
-    Active,
-    Finished,
-  }
-  class Project {
-    constructor(
-      public id: string,
-      public title: string,
-      public description: string,
-      public people: number,
-      public status: ProjectStatus
-    ) {}
-  }
-
   // project state management class
   type Listener<T> = (items: T[]) => void;
 
@@ -369,8 +355,8 @@ namespace App {
     renderContent() {}
   }
 
-  const prjInput = new ProjectInput();
+  new ProjectInput();
 
-  const activePrjList = new ProjectList("active");
-  const finishedPrjList = new ProjectList("finished");
+  new ProjectList("active");
+  new ProjectList("finished");
 }
