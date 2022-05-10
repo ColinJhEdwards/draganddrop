@@ -24,9 +24,6 @@ var App;
     }
     App.Project = Project;
 })(App || (App = {}));
-// this is how we import the namespace, triple / is important
-/// <reference path="drag-drop-interface.ts" />
-/// <reference path="project-model.ts" />
 var App;
 (function (App) {
     class State {
@@ -71,7 +68,11 @@ var App;
             }
         }
     }
-    const projectState = ProjectState.getInstance();
+    App.ProjectState = ProjectState;
+    App.projectState = ProjectState.getInstance();
+})(App || (App = {}));
+var App;
+(function (App) {
     function validate(validatableInput) {
         let isValid = true;
         //   required Check
@@ -103,6 +104,10 @@ var App;
         }
         return isValid;
     }
+    App.validate = validate;
+})(App || (App = {}));
+var App;
+(function (App) {
     // autobind decorator
     function autoBind(target, methodName, descriptor) {
         const originalMethod = descriptor.value;
@@ -115,6 +120,16 @@ var App;
         };
         return adjDescriptor;
     }
+    App.autoBind = autoBind;
+})(App || (App = {}));
+// this is how we import the namespace, triple / is important
+/// <reference path="drag-drop-interface.ts" />
+/// <reference path="project-model.ts" />
+/// <reference path="project-state.ts" />
+/// <reference path="validation.ts" />
+/// <reference path="autoBind.ts" />
+var App;
+(function (App) {
     // component base Class
     // the abstract keyword ensures we cant instantiate the class (Component.attach), because we intend to only use this class as an extendor
     class Component {
@@ -163,7 +178,7 @@ var App;
         }
     }
     __decorate([
-        autoBind
+        App.autoBind
     ], ProjectItem.prototype, "dragStartHandler", null);
     // projectList Class
     class ProjectList extends Component {
@@ -190,7 +205,7 @@ var App;
         }
         dropHandler(event) {
             const prjId = event.dataTransfer.getData("text/plain");
-            projectState.moveProject(prjId, this.type === "active" ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
+            App.projectState.moveProject(prjId, this.type === "active" ? App.ProjectStatus.Active : App.ProjectStatus.Finished);
         }
         dragLeaveHandler(event) {
             const listEl = this.element.querySelector("ul");
@@ -200,7 +215,7 @@ var App;
             this.element.addEventListener("dragover", this.dragOverHandler);
             this.element.addEventListener("dragleave", this.dragLeaveHandler);
             this.element.addEventListener("drop", this.dropHandler);
-            projectState.addListener((projects) => {
+            App.projectState.addListener((projects) => {
                 const relevantProjects = projects.filter((prj) => {
                     if (this.type === "active") {
                         return prj.status === App.ProjectStatus.Active;
@@ -219,13 +234,13 @@ var App;
         }
     }
     __decorate([
-        autoBind
+        App.autoBind
     ], ProjectList.prototype, "dragOverHandler", null);
     __decorate([
-        autoBind
+        App.autoBind
     ], ProjectList.prototype, "dropHandler", null);
     __decorate([
-        autoBind
+        App.autoBind
     ], ProjectList.prototype, "dragLeaveHandler", null);
     class ProjectInput extends Component {
         constructor() {
@@ -261,9 +276,9 @@ var App;
                 min: 1,
                 max: 5,
             };
-            if (!validate(titleValidatable) &&
-                !validate(descriptionValidatable) &&
-                !validate(peopleValidatable)) {
+            if (!App.validate(titleValidatable) &&
+                !App.validate(descriptionValidatable) &&
+                !App.validate(peopleValidatable)) {
                 alert("Invalid input, please try again!");
                 return;
             }
@@ -281,14 +296,14 @@ var App;
             const userInput = this.gatherUserInput();
             if (Array.isArray(userInput)) {
                 const [title, desc, people] = userInput;
-                projectState.addProject(title, desc, people);
+                App.projectState.addProject(title, desc, people);
                 this.clearInputs();
             }
         }
         renderContent() { }
     }
     __decorate([
-        autoBind
+        App.autoBind
     ], ProjectInput.prototype, "submitHandler", null);
     new ProjectInput();
     new ProjectList("active");
