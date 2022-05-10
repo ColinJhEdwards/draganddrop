@@ -122,12 +122,6 @@ var App;
     }
     App.autoBind = autoBind;
 })(App || (App = {}));
-// this is how we import the namespace, triple / is important
-/// <reference path="drag-drop-interface.ts" />
-/// <reference path="project-model.ts" />
-/// <reference path="project-state.ts" />
-/// <reference path="validation.ts" />
-/// <reference path="autoBind.ts" />
 var App;
 (function (App) {
     // component base Class
@@ -147,8 +141,13 @@ var App;
             this.hostElement.insertAdjacentElement(insertAtBeginning ? "afterbegin" : "beforeend", this.element);
         }
     }
+    App.Component = Component;
+})(App || (App = {}));
+/// <reference path="base-component.ts"/>
+var App;
+(function (App) {
     // ProjectItem Class
-    class ProjectItem extends Component {
+    class ProjectItem extends App.Component {
         constructor(hostId, project) {
             super("single-project", hostId, false, project.id);
             this.project = project;
@@ -180,8 +179,12 @@ var App;
     __decorate([
         App.autoBind
     ], ProjectItem.prototype, "dragStartHandler", null);
+    App.ProjectItem = ProjectItem;
+})(App || (App = {}));
+var App;
+(function (App) {
     // projectList Class
-    class ProjectList extends Component {
+    class ProjectList extends App.Component {
         constructor(type) {
             super(`project-list`, `app`, false, `${type}-projects`);
             this.type = type;
@@ -193,7 +196,7 @@ var App;
             const listEl = document.getElementById(`${this.type}-projects-list`);
             listEl.innerHTML = "";
             for (const prjItem of this.assignedProjects) {
-                new ProjectItem(this.element.querySelector("ul").id, prjItem);
+                new App.ProjectItem(this.element.querySelector("ul").id, prjItem);
             }
         }
         dragOverHandler(event) {
@@ -242,7 +245,11 @@ var App;
     __decorate([
         App.autoBind
     ], ProjectList.prototype, "dragLeaveHandler", null);
-    class ProjectInput extends Component {
+    App.ProjectList = ProjectList;
+})(App || (App = {}));
+var App;
+(function (App) {
+    class ProjectInput extends App.Component {
         constructor() {
             super(`project-input`, `app`, true, "user-input");
             // the "!" tells typescript we are confident this element is available
@@ -305,7 +312,20 @@ var App;
     __decorate([
         App.autoBind
     ], ProjectInput.prototype, "submitHandler", null);
-    new ProjectInput();
-    new ProjectList("active");
-    new ProjectList("finished");
+    App.ProjectInput = ProjectInput;
+})(App || (App = {}));
+// this is how we import the namespace, triple / is important
+/// <reference path="drag-drop-interface.ts" />
+/// <reference path="project-model.ts" />
+/// <reference path="project-state.ts" />
+/// <reference path="validation.ts" />
+/// <reference path="autoBind.ts" />
+/// <reference path="project-item.ts" />
+/// <reference path="project-list.ts" />
+/// <reference path="project-input.ts" />
+var App;
+(function (App) {
+    new App.ProjectInput();
+    new App.ProjectList("active");
+    new App.ProjectList("finished");
 })(App || (App = {}));
